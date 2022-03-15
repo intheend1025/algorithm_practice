@@ -15,9 +15,9 @@ def binary_search(a, b):
             if total > M:
                 break
 
-        # if total == M:
-        #     answer = c
-        #     return
+        if total == M:
+            answer = c
+            return
         if total < M:
             b = c-1
         else:

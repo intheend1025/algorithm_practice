@@ -1,36 +1,66 @@
-import sys
-sys.stdin = open('input.txt')
-
-T = int(input())
-
-
+# 정답
 def solution(numbers):
-    max_num = 0
+    my_dict = {}
     answer = ''
-    cnt = 0
-    numbers2 = numbers[:]
 
-    while len(numbers):
-        for i in range(len(numbers)):
-            a = str[numbers[i]]
-            b = str(max_num)
-            if int(a[0]) > int(b[0]):
-                max_num = numbers[i]
-                cnt = i
-            elif a[0] == b[0]:
-                if len(a) == len(b):
-                    if numbers[i] > max_num:
-                        max_num = numbers[i]
+    for i in numbers:
+        i = str(i)
+        n = 4 - len(i)
 
-        answer += str(max_num)
-        max_num = 0
-        del numbers[cnt]
+        if i + i[0]*n in my_dict:
+            if my_dict.get(i + i[0]*n, '') + i > i + my_dict.get(i + i[0]*n, ''):
+                my_dict[i + i[0]*n] = my_dict.get(i + i[0]*n, '') + i
+            else:
+                my_dict[i + i[0]*n] = i + my_dict.get(i + i[0]*n, '')
+        else:
+            my_dict[i + i[0]*n] = i
 
-    return answer
+    sort_dict = sorted(my_dict, reverse=True)
 
-for tc in range(1, T+1):
-    numbers = list(map(int, input().split()))
+    for num in sort_dict:
+        answer += my_dict[num]
 
-    print(solution(numbers))
+    return str(int(answer))
+
+# 시간초과
+def solution3(numbers):
+    numbers = list(map(str, numbers))
+    numbers.sort(reverse=True)
+    n = len(numbers)
+
+    for i in range(n-1, 0, -1):
+        if numbers[i-1]+numbers[i] < numbers[i]+numbers[i-1]:
+            numbers[i], numbers[i-1] = numbers[i-1], numbers[i]
+            k = i
+            while k < n-1:
+                print(numbers)
+                k += 1
+                if numbers[k-1]+numbers[k] < numbers[k]+numbers[k-1]:
+                    numbers[k], numbers[k - 1] = numbers[k - 1], numbers[k]
+            print(numbers[i], numbers[i-1])
+
+    answer = ''.join(numbers)
+    answer = int(answer)
+    return str(answer)
 
 
+
+# 타인 풀이
+def solution66(numbers):
+    numbers = list(map(str, numbers))
+    numbers.sort(key=lambda x: x*3, reverse=True)
+    return str(int(''.join(numbers)))
+
+
+print(solution([12, 121]), '12121')
+print(solution([21, 212]), '21221')
+
+print(solution([3, 30, 34, 5, 9, 0, 0, 0, 1000]))
+#
+# print(solution([3, 382, 38, 321, 9, 0, 40, 403]))
+
+print(solution([42, 3, 3, 3, 3, 322, 32, 23]), '4233333232223')
+# print(solution([3, 30, 34, 5, 9, 4, 40, 42]))
+# print(solution([10, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))
+print(solution([10, 101]), "10110")
+print(solution([1, 11, 111, 1111]), "1111111111")
